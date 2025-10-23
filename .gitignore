@@ -188,3 +188,15 @@ appsettings.Local.json
 
 # Avalonia preview cache
 .avalonia/
+
+
+# .gitignore para .NET / Avalonia
+bin/
+obj/
+*.user
+*.suo
+*.vs/
+*.ncb
+*.log
+*.DS_Store
+*.vscode/
