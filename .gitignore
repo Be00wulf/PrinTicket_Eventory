@@ -52,3 +52,139 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+
+
+# ------------------------------
+# Visual Studio / .NET / Avalonia
+# ------------------------------
+
+# Compiled binary folders
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Avalonia build output
+*.axaml.g.cs
+*.g.i.cs
+*.g.cs
+
+# Avalonia designer generated files
+*.designer.cs
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.rsuser
+*.vcxproj.user
+*.pidb
+
+# .NET build info
+project.lock.json
+project.fragment.lock.json
+artifacts/
+AppPackages/
+BundleArtifacts/
+*_i.c
+*_p.c
+*_h.h
+*.dbmdl
+*.dbproj.schemaview
+*.cachefile
+
+# ------------------------------
+# IDEs
+# ------------------------------
+
+# Visual Studio Code
+.vscode/
+.vscode-test/
+.history/
+.idea/
+*.code-workspace
+
+# Visual Studio for Windows
+.vs/
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# ------------------------------
+# OS & system
+# ------------------------------
+
+# Linux / macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# ------------------------------
+# Packages & dependencies
+# ------------------------------
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Node (por si usas frontend)
+node_modules/
+
+# ------------------------------
+# Configuración local / secreta
+# ------------------------------
+
+# Connection strings o claves locales
+appsettings.Development.json
+appsettings.Local.json
+*.env
+.env.*
+
+# ------------------------------
+# Logs y dumps
+# ------------------------------
+
+*.log
+*.tlog
+*.dmp
+*.stackdump
+*.error
+*.trace
+
+# ------------------------------
+# Sistema de build
+# ------------------------------
+
+# MSBuild
+*.Build.cs
+*.targets
+*.props
+
+# ------------------------------
+# Otros
+# ------------------------------
+
+# Backups o bases de datos locales
+*.db
+*.sqlite
+*.sqlite3
+*.bak
+
+# Avalonia preview cache
+.avalonia/
