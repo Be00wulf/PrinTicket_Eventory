@@ -4,6 +4,7 @@ using ReactiveUI;
 using Avalonia;
 using Avalonia.Controls;
 using PrinTicket.Views;
+using PrinTicket.Data;
 using System.Reactive;
 
 namespace PrinTicket.ViewModels
@@ -34,35 +35,58 @@ namespace PrinTicket.ViewModels
 
         public ReactiveCommand<Unit, Unit> LoginCommand { get; }
 
-        // 🔹 Constructor — aquí va la inicialización del comando
         public LoginViewModel()
         {
-            // Forzamos la ejecución del comando en el hilo principal (UI Thread)
-            LoginCommand = ReactiveCommand.CreateFromTask(ExecuteLoginAsync, outputScheduler: RxApp.MainThreadScheduler);
+            LoginCommand = ReactiveCommand.CreateFromTask(
+                ExecuteLoginAsync,
+                outputScheduler: RxApp.MainThreadScheduler
+            );
         }
 
+
+        //test
         private async Task ExecuteLoginAsync()
         {
-            if (Username == "majo" && Password == "1234")
+            try
             {
-                LoginStatus = "Inicio de sesión exitoso.";
+                bool validUser = await Database.ValidateUserAsync(Username, Password);
 
-                var lifetime = Application.Current?.ApplicationLifetime as Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime;
-
-                if (lifetime != null)
+                if (validUser)
                 {
-                    var dashboard = new DashboardWindow();
-                    dashboard.Show();
-                    lifetime.MainWindow?.Close();
-                    lifetime.MainWindow = dashboard;
+                    await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        LoginStatus = "Inicio de sesión exitoso.";
+
+                        var lifetime = Avalonia.Application.Current?.ApplicationLifetime
+                            as Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime;
+
+                        if (lifetime != null)
+                        {
+                            var dashboard = new DashboardWindow();
+                            dashboard.Show();
+                            lifetime.MainWindow?.Close();
+                            lifetime.MainWindow = dashboard;
+                        }
+                    });
+                }
+                else
+                {
+                    await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        LoginStatus = "Credenciales incorrectas.";
+                    });
                 }
             }
-            else
+            catch (Exception ex)
             {
-                LoginStatus = "Credenciales incorrectas.";
+                await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    LoginStatus = $"Error al iniciar sesión: {ex.Message}";
+                });
             }
-
-            await Task.CompletedTask;
         }
-    }
+
+        
+
+    }//fin
 }

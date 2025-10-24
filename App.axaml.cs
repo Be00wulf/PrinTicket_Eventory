@@ -1,7 +1,10 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using PrinTicket.Views;
+using ReactiveUI;
+using Avalonia.Threading;
+using System.Reactive.Concurrency;
+using Avalonia.ReactiveUI;
 
 namespace PrinTicket
 {
@@ -14,12 +17,21 @@ namespace PrinTicket
 
         public override void OnFrameworkInitializationCompleted()
         {
+            RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
+
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow();
+                desktop.MainWindow = new MainWindow();          
             }
 
             base.OnFrameworkInitializationCompleted();
         }
+
+
+
+
+
+
+
     }
 }

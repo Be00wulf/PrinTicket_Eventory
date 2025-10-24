@@ -4,10 +4,10 @@ using MySql.Data.MySqlClient;
 
 namespace PrinTicket.Data
 {
-    public class Database
+    public static class Database
     {
         private const string ConnectionString =
-            "Server=localhost;Database=PrinticketDB;User ID=root;Password=tu_password;";
+            "server=localhost;user=prinuser;password=1234;database=PrinticketDB;";
 
         public static async Task<bool> ValidateUserAsync(string username, string password)
         {
@@ -15,7 +15,7 @@ namespace PrinTicket.Data
             await connection.OpenAsync();
 
             var cmd = new MySqlCommand(
-                "SELECT COUNT(*) FROM users WHERE username=@username AND password=@password",
+                "SELECT COUNT(*) FROM usuarios WHERE username=@username AND password=@password",
                 connection
             );
             cmd.Parameters.AddWithValue("@username", username);
@@ -23,6 +23,21 @@ namespace PrinTicket.Data
 
             var result = Convert.ToInt32(await cmd.ExecuteScalarAsync());
             return result > 0;
+        }
+
+        public static async Task ProbarConexionAsync()
+        {
+            try
+            {
+                await using var connection = new MySqlConnection(ConnectionString);
+                await connection.OpenAsync();
+
+                Console.WriteLine("Conexión exitosa a la base de datos!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al conectar a la base de datos: {ex.Message}");
+            }
         }
     }
 }

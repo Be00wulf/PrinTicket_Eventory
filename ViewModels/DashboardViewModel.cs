@@ -16,10 +16,10 @@ namespace PrinTicket.ViewModels
 
         public DashboardViewModel()
         {
-            BuscarEventoCommand = ReactiveCommand.CreateFromTask(BuscarEvento);
-            GenerarTicketsCommand = ReactiveCommand.CreateFromTask(GenerarTickets);
-            VerReportesCommand = ReactiveCommand.CreateFromTask(VerReportes);
-            LogoutCommand = ReactiveCommand.CreateFromTask(CerrarSesion);
+            BuscarEventoCommand = ReactiveCommand.Create(() => { });
+            GenerarTicketsCommand = ReactiveCommand.Create(() => { });
+            VerReportesCommand = ReactiveCommand.Create(() => { });
+            LogoutCommand = ReactiveCommand.Create(() => { });
         }
 
         private async Task BuscarEvento()
