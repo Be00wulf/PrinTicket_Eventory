@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 
@@ -7,8 +9,9 @@ namespace PrinTicket.Data
     public class Database
     {
         private const string ConnectionString =
-            // "Server=localhost;Database=PrinticketDB;User ID=root;Password=tu_password;";
             "server=localhost;user=prinuser;password=1234;database=PrinticketDB;";
+
+
 
         public static async Task<bool> ValidateUserAsync(string username, string password)
         {
@@ -25,5 +28,69 @@ namespace PrinTicket.Data
             var result = Convert.ToInt32(await cmd.ExecuteScalarAsync());
             return result > 0;
         }
-    }
+
+
+
+        public class Evento
+        {
+            public int Id { get; set; }
+            public string Nombre { get; set; } = string.Empty;
+            public override string ToString()
+            {
+                return Nombre; 
+            }
+        }
+
+        public static async Task<List<Evento>> ObtenerEventosAsync()
+        {
+            var lista = new List<Evento>();
+
+            await using var connection = new MySqlConnection(ConnectionString);
+            await connection.OpenAsync();
+
+            var cmd = new MySqlCommand("SELECT id, nombre FROM events", connection);
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                lista.Add(new Evento
+                {
+                    Id = reader.GetInt32("id"),
+                    Nombre = reader.GetString("nombre")
+                });
+            }
+
+            return lista;
+        }
+
+        public static async Task<bool> InsertarTicketAsync(int eventId, string usuario)
+        {
+            await using var connection = new MySqlConnection(ConnectionString);
+            await connection.OpenAsync();
+
+            var cmd = new MySqlCommand(
+                "INSERT INTO tickets (event_id, usuario) VALUES (@event_id, @usuario)",
+                connection
+            );
+            cmd.Parameters.AddWithValue("@event_id", eventId);
+            cmd.Parameters.AddWithValue("@usuario", usuario);
+
+            return await cmd.ExecuteNonQueryAsync() > 0;
+        }   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
+    }//fin
 }

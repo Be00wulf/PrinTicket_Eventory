@@ -12,8 +12,8 @@ namespace PrinTicket.Views
 
         private void OnGenerateClicked(object? sender, RoutedEventArgs e)
         {
-            var win = new GenerateTicketsWindow();
-            win.Show();
+            var generateWindow = new GenerateTicketsWindow("majo");
+            generateWindow.ShowDialog(this);
         }
 
         private void OnReportsClicked(object? sender, RoutedEventArgs e)
