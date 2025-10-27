@@ -2,12 +2,17 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="PrinTicket.Views.DashboardWindow"
-    Title="🎟️ PrinTicket Dashboard"
+    Title="PrinTicket Dashboard"
     Width="600"
     Height="400">
 
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
         <TextBlock Text="Bienvenido a PrinTicket Dashboard" FontSize="20" HorizontalAlignment="Center"/>
+        <Button Content="Generar Tickets" HorizontalAlignment="Center" Margin="0,20,0,0" Click="OnGenerateClicked"/>
+        <Button Content="Ver Reportes" HorizontalAlignment="Center" Margin="0,20,0,0" Click="OnReportsClicked"/>
+        <Button Content="Ajustes" HorizontalAlignment="Center" Margin="0,20,0,0" Click="OnSettingsClicked"/>
         <Button Content="Cerrar" HorizontalAlignment="Center" Margin="0,20,0,0" Click="OnCloseClicked"/>
+
+
     </StackPanel>
 </Window>
