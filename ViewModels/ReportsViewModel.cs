@@ -6,6 +6,7 @@ using System.Reactive;
 using System.Threading.Tasks;
 using PrinTicket.Data;
 using Avalonia.Threading;
+using static PrinTicket.Data.Database;
 
 namespace PrinTicket.ViewModels
 {
@@ -18,36 +19,62 @@ namespace PrinTicket.ViewModels
 
     public class ReportsViewModel : ReactiveObject
     {
-        public ObservableCollection<TicketReporte> Tickets { get; } = new();
+        private readonly ObservableCollection<TicketReporte> _tickets = new();
+        public ObservableCollection<TicketReporte> Tickets => _tickets; 
 
-        public ReactiveCommand<Unit, Unit> LoadTicketsCommand { get; }
+        private readonly ObservableCollection<EventoReporte> _eventos = new();
+        public ObservableCollection<EventoReporte> Eventos => _eventos;
+        
+        private readonly ObservableCollection<UsuarioReporte> _usuarios = new();
+        public ObservableCollection<UsuarioReporte> Usuarios => _usuarios;
+
+        private int _selectedReportIndex;
+        public int SelectedReportIndex
+        {
+            get => _selectedReportIndex;
+            set => this.RaiseAndSetIfChanged(ref _selectedReportIndex, value);
+        }
+
+        public ReactiveCommand<Unit, Unit> LoadReportsCommand { get; }
 
         public ReportsViewModel()
         {
-            LoadTicketsCommand = ReactiveCommand.CreateFromTask(LoadTicketsAsync);
-
-            Task.Run(() => LoadTicketsCommand.Execute().Subscribe());
+            LoadReportsCommand = ReactiveCommand.CreateFromTask(LoadReportsAsync);
+            Task.Run(() => LoadReportsCommand.Execute().Subscribe());
         }
 
-
-        private async Task LoadTicketsAsync()
+        private async Task LoadReportsAsync()
         {
             try
             {
-                var ticketsData = await Database.ObtenerTicketsAsync();
+                var ticketsTask = Database.ObtenerTicketsAsync();
+                var eventosTask = Database.ObtenerReporteEventosAsync();
+                var usuariosTask = Database.ObtenerReporteUsuariosAsync();
+
+                await Task.WhenAll(ticketsTask, eventosTask, usuariosTask);
+
+                var ticketsData = ticketsTask.Result;
+                var eventosData = eventosTask.Result;
+                var usuariosData = usuariosTask.Result;
 
                 await Dispatcher.UIThread.InvokeAsync(() =>
                 {
-                    Tickets.Clear();
-
+                    _tickets.Clear();
                     foreach (var (nombre, usuario, fecha) in ticketsData)
                     {
-                        Tickets.Add(new TicketReporte
-                        {
-                            EventoNombre = nombre,
-                            Usuario = usuario,
-                            FechaEmision = fecha
-                        });
+                        _tickets.Add(new TicketReporte { EventoNombre = nombre, Usuario = usuario, FechaEmision = fecha });
+                    }
+                    
+                    _eventos.Clear();
+                    foreach (var e in eventosData)
+                    {
+                        _eventos.Add(e);
+                    }
+                    
+                    _usuarios.Clear();
+                    foreach (var u in usuariosData)
+                    {
+                        _usuarios.Add(u);
                     }
                 });
             }
@@ -56,6 +83,7 @@ namespace PrinTicket.ViewModels
                 Console.WriteLine($"Error al cargar reportes: {ex.Message}");
             }
         }
+    
 
         
     }   //fin

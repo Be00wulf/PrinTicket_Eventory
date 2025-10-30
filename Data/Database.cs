@@ -102,8 +102,72 @@ namespace PrinTicket.Data
             return await cmd.ExecuteNonQueryAsync() > 0;
         }   
 
+        public class EventoReporte
+        {
+            public string Nombre { get; set; } = string.Empty;
+            public DateTime Fecha { get; set; } 
+            public string Ubicacion { get; set; } = string.Empty;
+            public int Capacidad { get; set; } 
+        }
 
+        public class UsuarioReporte
+        {
+            public string Username { get; set; } = string.Empty;
+            public DateTime CreadoEn { get; set; }
+        }
 
+        public static async Task<List<EventoReporte>> ObtenerReporteEventosAsync()
+        {
+            var lista = new List<EventoReporte>();
+            await using var connection = new MySqlConnection(ConnectionString);
+            await connection.OpenAsync();
+
+            var cmd = new MySqlCommand(
+                "SELECT nombre, fecha, ubicacion, capacidad FROM events ORDER BY fecha DESC",
+                connection);
+
+            var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                var evento = new EventoReporte
+                {
+                    Nombre = reader.GetString("nombre"),
+                    Ubicacion = reader.GetString("ubicacion"),
+                    
+                    Fecha = reader.IsDBNull(reader.GetOrdinal("fecha")) 
+                            ? DateTime.MinValue 
+                            : reader.GetDateTime("fecha"),
+
+                    Capacidad = reader.IsDBNull(reader.GetOrdinal("capacidad")) 
+                                ? 0 
+                                : reader.GetInt32("capacidad")
+                };
+                lista.Add(evento);
+            }
+            return lista;
+        }
+
+        public static async Task<List<UsuarioReporte>> ObtenerReporteUsuariosAsync()
+        {
+            var lista = new List<UsuarioReporte>();
+            await using var connection = new MySqlConnection(ConnectionString);
+            await connection.OpenAsync();
+
+            var cmd = new MySqlCommand(
+                "SELECT username, creado_en FROM usuarios ORDER BY creado_en DESC",
+                connection);
+
+            var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                lista.Add(new UsuarioReporte
+                {
+                    Username = reader.GetString("username"),
+                    CreadoEn = reader.GetDateTime("creado_en")
+                });
+            }
+            return lista;
+        }
 
 
 

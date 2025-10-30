@@ -4,39 +4,104 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     
-    xmlns:vm="clr-namespace:PrinTicket.ViewModels"  x:Class="PrinTicket.Views.ReportsWindow"
-    Title="Reportes de Tickets"
-    Width="800"
-    Height="500"
+    xmlns:vm="clr-namespace:PrinTicket.ViewModels"
+    x:Class="PrinTicket.Views.ReportsWindow"
+    Title="Múltiples Reportes PrinTicket"
+    Width="1000"
+    Height="650"
     mc:Ignorable="d"
     x:DataType="vm:ReportsViewModel">
 
-    <Grid Margin="15" RowDefinitions="Auto, Auto, *"> 
+    <Grid Margin="15" RowDefinitions="Auto, *"> 
         
-        <ScrollViewer Grid.Row="2">
-            <StackPanel>
-                
-                <TextBlock Margin="0,5,0,10" 
-                           FontWeight="Bold"
-                           Text="{Binding Tickets.Count, StringFormat='Total de Tickets Cargados: {0}'}" />
+        <DockPanel Grid.Row="0" Margin="0,0,0,15">
+            <Button Content="Recargar Todos" 
+                    DockPanel.Dock="Right" 
+                    Command="{Binding LoadReportsCommand}"/>
+            
+            <TextBlock Text="Reportes del Sistema" 
+                       FontSize="24" 
+                       FontWeight="Bold" 
+                       VerticalAlignment="Center"/>
+        </DockPanel>
 
-                <ItemsControl ItemsSource="{Binding Tickets}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Margin="0,2,0,2">
-                                <Run Text=" * Evento: " FontWeight="SemiBold"/>
-                                <Run Text="{Binding EventoNombre}" />
-                                <Run Text=" | Usuario: " FontWeight="SemiBold"/>
-                                <Run Text="{Binding Usuario}" />
-                                <Run Text=" | Fecha: " FontWeight="SemiBold"/>
-                                <Run Text="{Binding FechaEmision, StringFormat='dd-MM-yy'}" />
-                            </TextBlock>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                
-            </StackPanel>
-        </ScrollViewer>
-        
+        <TabControl Grid.Row="1" SelectedIndex="{Binding SelectedReportIndex}">
+            
+            <TabItem Header="Tickets Emitidos">
+                <ScrollViewer>
+                    <StackPanel Spacing="10">
+                        <TextBlock Margin="0,5,0,10" 
+                                   FontWeight="Bold"
+                                   Text="{Binding Tickets.Count, StringFormat='Total de Tickets Emitidos: {0}'}" />
+
+                        <ItemsControl ItemsSource="{Binding Tickets}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Margin="0,2,0,2" Background="" Padding="5">
+                                        <Run Text="* Evento: " FontWeight="SemiBold"/>
+                                        <Run Text="{Binding EventoNombre}" />
+                                        <Run Text=" | Usuario: " FontWeight="SemiBold"/>
+                                        <Run Text="{Binding Usuario}" />
+                                        <Run Text=" | Fecha: " FontWeight="SemiBold"/>
+                                        <Run Text="{Binding FechaEmision, StringFormat='dd-MM-yy HH:mm'}" />
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            
+            <TabItem Header="Eventos y Capacidad">
+                <ScrollViewer>
+                    <StackPanel Spacing="10">
+                        <TextBlock Margin="0,5,0,10" 
+                                   FontWeight="Bold"
+                                   Text="{Binding Eventos.Count, StringFormat='Total de Eventos Registrados: {0}'}" />
+
+                        <ItemsControl ItemsSource="{Binding Eventos}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Margin="0,2,0,2" Background="" Padding="5">
+                                        <Run Text="* Nombre: " FontWeight="SemiBold"/>
+                                        <Run Text="{Binding Nombre}" />
+                                        <Run Text=" | Fecha: " FontWeight="SemiBold"/>
+                                        <Run Text="{Binding Fecha}" />
+                                        <Run Text=" | Ubicación: " FontWeight="SemiBold"/>
+                                        <Run Text="{Binding Ubicacion}" />
+                                        <Run Text=" | Capacidad: " FontWeight="SemiBold"/>
+                                        <Run Text="{Binding Capacidad}" />
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Usuarios Registrados">
+                <ScrollViewer>
+                    <StackPanel Spacing="10">
+                        <TextBlock Margin="0,5,0,10" 
+                                   FontWeight="Bold"
+                                   Text="{Binding Usuarios.Count, StringFormat='Total de Usuarios Administradores: {0}'}" />
+
+                        <ItemsControl ItemsSource="{Binding Usuarios}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Margin="0,2,0,2" Background="" Padding="5">
+                                        <Run Text="* Usuario: " FontWeight="SemiBold"/>
+                                        <Run Text="{Binding Username}" />
+                                        <Run Text=" | Creado Desde: " FontWeight="SemiBold"/>
+                                        <Run Text="{Binding CreadoEn, StringFormat='dd/MM/yyyy'}" />
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+        </TabControl>
     </Grid>
 </Window>
