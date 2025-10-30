@@ -11,6 +11,30 @@ namespace PrinTicket.Data
         private const string ConnectionString =
             "server=localhost;user=prinuser;password=1234;database=PrinticketDB;";
 
+        public static async Task<List<(string EventoNombre, string Usuario, DateTime FechaEmision)>> ObtenerTicketsAsync()
+        {
+            var lista = new List<(string, string, DateTime)>();
+            await using var connection = new MySqlConnection(ConnectionString);
+            await connection.OpenAsync();
+
+            var cmd = new MySqlCommand(
+                @"SELECT e.nombre AS EventoNombre, t.usuario, t.fecha_emision
+                FROM tickets t
+                JOIN events e ON t.event_id = e.id",
+                connection);
+
+            var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                lista.Add((
+                    reader.GetString("EventoNombre"),
+                    reader.GetString("usuario"),
+                    reader.GetDateTime("fecha_emision")
+                ));
+            }
+
+            return lista;
+        }
 
 
         public static async Task<bool> ValidateUserAsync(string username, string password)

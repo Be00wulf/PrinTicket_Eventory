@@ -17,6 +17,11 @@ namespace PrinTicket.Views
             CargarEventosAsync();
         }
 
+        public GenerateTicketsWindow() 
+        {
+            InitializeComponent();
+        }
+
         private async Task CargarEventosAsync()
         {
             try

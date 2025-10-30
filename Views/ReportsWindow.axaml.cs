@@ -1,5 +1,5 @@
 using Avalonia.Controls;
-using Avalonia.Interactivity;
+using PrinTicket.ViewModels;
 
 namespace PrinTicket.Views
 {
@@ -8,11 +8,7 @@ namespace PrinTicket.Views
         public ReportsWindow()
         {
             InitializeComponent();
-        }
-
-        private void OnCloseClicked(object? sender, RoutedEventArgs e)
-        {
-            this.Close();
+            this.DataContext = new ReportsViewModel();
         }
     }
 }

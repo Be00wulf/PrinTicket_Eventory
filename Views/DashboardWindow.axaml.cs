@@ -16,10 +16,10 @@ namespace PrinTicket.Views
             generateWindow.ShowDialog(this);
         }
 
-        private void OnReportsClicked(object? sender, RoutedEventArgs e)
+        private void OnReportsClicked(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            var win = new ReportsWindow();
-            win.Show();
+            var reportsWindow = new ReportsWindow();
+            reportsWindow.Show();
         }
 
         private void OnSettingsClicked(object? sender, RoutedEventArgs e)
